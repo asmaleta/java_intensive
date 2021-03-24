@@ -50,6 +50,25 @@ public class DataBaseLogic {
             e.printStackTrace();
         }
     }
+    public LinkedList<Student> sortStudents(){
+        LinkedList<Student> students = new LinkedList<>();
+        try (Connection connection = dbs.getDbConnection();
+             Statement statement = connection.createStatement()){
+
+            ResultSet rs = statement.executeQuery(StudentsSQL.SORT_STUDENTS_BY_AGE.QUERY);
+            while (rs.next()) {
+                students.add(new Student(rs.getInt("id"),
+                        rs.getString("name"),
+                        rs.getString("surname"),
+                        rs.getInt("age")));
+            }
+        }catch (SQLException e){
+            e.printStackTrace();
+        }finally {
+            return students;
+        }
+
+    }
     public LinkedList<Student> getStudents(){
         LinkedList<Student> students = new LinkedList<>();
         try (Connection connection = dbs.getDbConnection();
@@ -84,7 +103,7 @@ public class DataBaseLogic {
 
         DELETE_STUDENT_BY_ID("DELETE FROM students where id = ? "),
 
-        SORT_STUDENTS_BY_AGE("");
+        SORT_STUDENTS_BY_AGE("SELECT * FROM students ORDER BY age");
 
 
 
