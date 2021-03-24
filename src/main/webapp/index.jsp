@@ -29,7 +29,7 @@
     <input type="submit" value="Add">
 </form>
 <form method="post">
-    <input type="text" name="id">
+    <input required pe="text" name="id">
     <input type="hidden" name="command" value="delete">
     <input type="submit" value="Delete">
 </form>
