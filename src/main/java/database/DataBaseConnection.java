@@ -1,6 +1,7 @@
 package database;
 
 import lombok.Getter;
+import org.postgresql.ds.PGPoolingDataSource;
 import org.postgresql.ds.PGSimpleDataSource;
 
 import java.sql.Connection;
@@ -9,6 +10,7 @@ import java.sql.SQLException;
 import java.util.Scanner;
 public class DataBaseConnection {
     private PGSimpleDataSource ds;
+
 
     private final String USER_NAME = "postgres";
     private final String PASSWORD = "1234";
