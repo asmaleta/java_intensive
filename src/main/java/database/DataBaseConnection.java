@@ -10,11 +10,9 @@ import java.sql.SQLException;
 import java.util.Scanner;
 public class DataBaseConnection {
     private PGSimpleDataSource ds;
-
-
     private final String USER_NAME = "postgres";
     private final String PASSWORD = "1234";
-    private final String DB_URL = "jdbc:postgresql://10.0.2.15:5432/java_intensive" ;
+    private final String DB_URL = "jdbc:postgresql://192.168.1.233:5432/java_intensive" ;
 
     public DataBaseConnection() {
         ds = new PGSimpleDataSource();
