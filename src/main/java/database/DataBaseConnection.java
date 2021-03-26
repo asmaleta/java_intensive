@@ -14,7 +14,7 @@ public class DataBaseConnection {
 
     private final String USER_NAME = "postgres";
     private final String PASSWORD = "1234";
-    private final String DB_URL = "jdbc:postgresql://localhost:5432/java_intensive" ;
+    private final String DB_URL = "jdbc:postgresql://10.0.2.15:5432/java_intensive" ;
 
     public DataBaseConnection() {
         ds = new PGSimpleDataSource();

@@ -103,7 +103,7 @@ public class DataBaseLogic {
 
         DELETE_STUDENT_BY_ID("DELETE FROM students where id = ? "),
 
-        SORT_STUDENTS_BY_AGE("SELECT * FROM students ORDER BY age");
+        SORT_STUDENTS_BY_AGE("SELECT * FROM students ORDER BY name, surname, age");
 
 
 
