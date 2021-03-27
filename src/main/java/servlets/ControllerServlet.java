@@ -26,8 +26,6 @@ public class ControllerServlet extends HttpServlet {
     }
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException, ServletException {
-        List<Student> students = dataBaseLogic.getStudents();
-        req.getSession().setAttribute("students", students);
         String name = req.getParameter("command");
         Command command = commandManager.getCommandByName(name);
         resp.getWriter().print(command.execute(req,resp,dataBaseLogic));

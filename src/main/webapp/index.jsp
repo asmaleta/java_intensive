@@ -14,22 +14,22 @@
 
 <html>
 <form method="post">
-    <input required type="text" name = "id" >
-    <input required type="text" name="name" >
-    <input required type="text" name="surname" >
-    <input required type="text" name="age" >
+    <input required type="text" name = "id" placeholder="id">
+    <input required type="text" name="name" placeholder="name" >
+    <input required type="text" name="surname" placeholder="surname" >
+    <input required type="text" name="age"placeholder="age" >
     <input type="hidden" name="command" value="update">
     <input type="submit" value="Update">
 </form>
 <form method="post">
-    <input required type="text" name="name">
-    <input required type="text" name="surname" >
-    <input required type="text" name="age">
+    <input required type="text" name="name" placeholder="name" >
+    <input required type="text" name="surname" placeholder="surname" >
+    <input required type="text" name="age"placeholder="age" >
     <input type="hidden" name="command" value="add">
     <input type="submit" value="Add">
 </form>
 <form method="post">
-    <input required pe="text" name="id">
+    <input required pe="text" name="id" placeholder="id">
     <input type="hidden" name="command" value="delete">
     <input type="submit" value="Delete">
 </form>

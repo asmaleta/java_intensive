@@ -9,7 +9,7 @@ import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 
 
 
-@SpringBootTest
+
 public class Test {
 
     Command command ;

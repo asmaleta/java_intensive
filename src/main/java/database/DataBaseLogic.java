@@ -3,8 +3,7 @@ package database;
 import models.Student;
 
 import java.sql.*;
-import java.util.LinkedHashSet;
-import java.util.LinkedList;
+import java.util.ArrayList;
 
 public class DataBaseLogic {
     private volatile DataBaseConnection dbs;
@@ -20,24 +19,28 @@ public class DataBaseLogic {
             preparedStatement.setString(++pointer, student.getSurname());
             preparedStatement.setInt(++pointer, student.getAge());
             ResultSet rs = preparedStatement.executeQuery();
-            return rs.getInt(1);
+            if (rs.next())
+                return rs.getInt(1);
+            else return -1;
         }catch (SQLException e){
             e.printStackTrace();
             return -1;
         }
     }
-    public void deleteStudent(int id) {
+    public boolean deleteStudent(int id) {
         try (Connection connection = dbs.getDbConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(StudentsSQL.DELETE_STUDENT_BY_ID.QUERY)) {
             int pointer = 0;
             preparedStatement.setInt(++pointer, id);
             preparedStatement.executeUpdate();
+            return true;
         }catch (SQLException e){
             e.printStackTrace();
+            return false;
         }
     }
 
-    public void updateStudent(Student student) {
+    public boolean updateStudent(Student student) {
         try (Connection connection = dbs.getDbConnection();
                 PreparedStatement preparedStatement = connection.prepareStatement(StudentsSQL.UPDATE_STUDENT_BY_ID.QUERY)) {
             int pointer = 0;
@@ -46,16 +49,19 @@ public class DataBaseLogic {
             preparedStatement.setInt(++pointer, student.getAge());
             preparedStatement.setInt(++pointer, student.getId());
             preparedStatement.executeUpdate();
+            return true;
         }catch (SQLException e){
             e.printStackTrace();
+            return false;
         }
     }
-    public LinkedList<Student> sortStudents(){
-        LinkedList<Student> students = new LinkedList<>();
+    public ArrayList<Student> sortStudents(){
+        ArrayList<Student> students = null;
         try (Connection connection = dbs.getDbConnection();
              Statement statement = connection.createStatement()){
 
             ResultSet rs = statement.executeQuery(StudentsSQL.SORT_STUDENTS_BY_AGE.QUERY);
+            students = new ArrayList<>();
             while (rs.next()) {
                 students.add(new Student(rs.getInt("id"),
                         rs.getString("name"),
@@ -64,17 +70,19 @@ public class DataBaseLogic {
             }
         }catch (SQLException e){
             e.printStackTrace();
+            students = null;
         }finally {
             return students;
         }
 
     }
-    public LinkedList<Student> getStudents(){
-        LinkedList<Student> students = new LinkedList<>();
+    public ArrayList<Student> getStudents(){
+        ArrayList<Student> students = null;
         try (Connection connection = dbs.getDbConnection();
                 Statement statement = connection.createStatement()){
 
             ResultSet rs = statement.executeQuery(StudentsSQL.GET_STUDENTS.QUERY);
+            students = new ArrayList<>();
             while (rs.next()) {
                 students.add(new Student(rs.getInt("id"),
                         rs.getString("name"),
@@ -83,6 +91,7 @@ public class DataBaseLogic {
             }
         }catch (SQLException e){
             e.printStackTrace();
+            students = null;
         }finally {
             return students;
         }

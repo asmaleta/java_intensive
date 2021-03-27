@@ -13,10 +13,12 @@ public class UpdateStudentCommand extends Command {
 
     @Override
     public String execute(HttpServletRequest request, HttpServletResponse response, DataBaseLogic dataBaseLogic) {
-        dataBaseLogic.updateStudent(new Student(Integer.parseInt(request.getParameter("id")),
+        if (dataBaseLogic.updateStudent(new Student(Integer.parseInt(request.getParameter("id")),
                                                     request.getParameter("name"),
                                                         request.getParameter("surname"),
-                                                            Integer.parseInt(request.getParameter("age"))));
+                                                            Integer.parseInt(request.getParameter("age")))))
         return "id = " + request.getParameter("id") ;
+        else
+            return "Error delete from DB";
     }
 }
