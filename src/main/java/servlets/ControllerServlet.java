@@ -3,7 +3,6 @@ package servlets;
 import commands.Command;
 import database.DataBaseConnection;
 import database.DataBaseLogic;
-import models.Student;
 import utils.CommandManager;
 
 
@@ -13,7 +12,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.List;
+import java.sql.SQLException;
 
 @WebServlet("/index")
 public class ControllerServlet extends HttpServlet {
@@ -22,6 +21,8 @@ public class ControllerServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException, ServletException {
+        Command command = commandManager.getCommandByName("show");
+        resp.getWriter().print(command.execute(req,resp,dataBaseLogic));
         getServletContext().getRequestDispatcher("/index.jsp").forward(req, resp);
     }
     @Override
@@ -29,12 +30,27 @@ public class ControllerServlet extends HttpServlet {
         String name = req.getParameter("command");
         Command command = commandManager.getCommandByName(name);
         resp.getWriter().print(command.execute(req,resp,dataBaseLogic));
-        System.out.println(name);
+        if(!name.equals("sort")) {
+            command = commandManager.getCommandByName("show");
+            command.execute(req, resp, dataBaseLogic);
+        }
         getServletContext().getRequestDispatcher("/index.jsp").forward(req, resp);
     }
+
+
     @Override
     public void init() {
         commandManager = new CommandManager();
-        dataBaseLogic = new DataBaseLogic(new DataBaseConnection());
+        dataBaseLogic = new DataBaseLogic();
+    }
+
+    @Override
+    public void destroy()  {
+        try {
+            DataBaseConnection.close();
+        }catch (SQLException e){
+            System.out.println("Exception close connection");
+        }
+
     }
 }

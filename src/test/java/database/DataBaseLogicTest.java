@@ -20,7 +20,7 @@ class DataBaseLogicTest {
     @BeforeAll
     static void init() {
         dataBaseConnection = new DataBaseConnection();
-        dataBaseLogic = new DataBaseLogic(dataBaseConnection);
+        dataBaseLogic = new DataBaseLogic();
     }
 
 
@@ -49,6 +49,11 @@ class DataBaseLogicTest {
         final boolean ans = dataBaseLogic.updateStudent(studentFortUpdate);
         assertTrue(ans);
         dataBaseLogic.deleteStudent(testStudent);
+    }
+    @Test
+    void getStudentById() {
+        final Integer testStudent  =  dataBaseLogic.addStudent(new Student(null,"Test","Update",443));
+        System.out.println(dataBaseLogic.getStudentById(testStudent));
     }
 
     @Test

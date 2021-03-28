@@ -1,39 +1,39 @@
 package database;
 
-import lombok.Getter;
-import org.postgresql.ds.PGPoolingDataSource;
-import org.postgresql.ds.PGSimpleDataSource;
+import org.apache.commons.dbcp2.BasicDataSource;
 
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.SQLException;
-import java.util.Scanner;
 public class DataBaseConnection {
-    private PGSimpleDataSource ds;
-    private final String USER_NAME = "postgres";
-    private final String PASSWORD = "1234";
-    private final String DB_URL = "jdbc:postgresql://192.168.1.233:5432/java_intensive" ;
-
-    public DataBaseConnection() {
-        ds = new PGSimpleDataSource();
+    private static BasicDataSource ds = new BasicDataSource();;
+    private final static String USER_NAME = "postgres";
+    private final static String PASSWORD = "1234";
+    private final static String DB_URL = "jdbc:postgresql://192.168.1.233:5432/java_intensive" ;
+    static {
+        ds.setDriverClassName("org.postgresql.Driver");
+        ds.setUrl(DB_URL);
+        ds.setUsername(USER_NAME);
+        ds.setPassword(PASSWORD);
+        ds.setMinIdle(5);
+        ds.setMaxIdle(10);
+        ds.setMaxOpenPreparedStatements(100);
+    }
+    /*public DataBaseConnection() {
+        ds = new BasicDataSource();
+        configureDS();
     }
 
     private void configureDS(){
-        ds.setURL(DB_URL);
-        ds.setUser(USER_NAME);
-        ds.setPassword(PASSWORD);
+
+    }*/
+
+    public static Connection getDbConnection() throws SQLException {
+        return ds.getConnection();
+
     }
 
-    public Connection getDbConnection() {
-        configureDS();
-        Connection connection = null;
-        try {
-            connection = ds.getConnection();
-        } catch (SQLException e) {
-            throw new RuntimeException("Ошибка при загузке настроек дб ");
-        }finally {
-            return connection;
-        }
+    public static void  close() throws SQLException {
+        ds.close();
     }
 
 }

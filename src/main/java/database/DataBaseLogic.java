@@ -6,13 +6,14 @@ import java.sql.*;
 import java.util.ArrayList;
 
 public class DataBaseLogic {
-    private volatile DataBaseConnection dbs;
 
-    public DataBaseLogic(DataBaseConnection dataBaseConnection) {
-        this.dbs = dataBaseConnection;
+
+    public DataBaseLogic() {
+
     }
+
     public Integer addStudent(Student student) {
-        try (Connection connection = dbs.getDbConnection();
+        try (Connection connection = DataBaseConnection.getDbConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(StudentsSQL.ADD_STUDENT.QUERY)) {
             int pointer = 0;
             preparedStatement.setString(++pointer, student.getName());
@@ -28,7 +29,7 @@ public class DataBaseLogic {
         }
     }
     public boolean deleteStudent(int id) {
-        try (Connection connection = dbs.getDbConnection();
+        try (Connection connection = DataBaseConnection.getDbConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(StudentsSQL.DELETE_STUDENT_BY_ID.QUERY)) {
             int pointer = 0;
             preparedStatement.setInt(++pointer, id);
@@ -41,7 +42,7 @@ public class DataBaseLogic {
     }
 
     public boolean updateStudent(Student student) {
-        try (Connection connection = dbs.getDbConnection();
+        try (Connection connection = DataBaseConnection.getDbConnection();
                 PreparedStatement preparedStatement = connection.prepareStatement(StudentsSQL.UPDATE_STUDENT_BY_ID.QUERY)) {
             int pointer = 0;
             preparedStatement.setString(++pointer, student.getName());
@@ -57,10 +58,10 @@ public class DataBaseLogic {
     }
     public ArrayList<Student> sortStudents(){
         ArrayList<Student> students = null;
-        try (Connection connection = dbs.getDbConnection();
+        try (Connection connection = DataBaseConnection.getDbConnection();
              Statement statement = connection.createStatement()){
 
-            ResultSet rs = statement.executeQuery(StudentsSQL.SORT_STUDENTS_BY_AGE.QUERY);
+            ResultSet rs = statement.executeQuery(StudentsSQL.SORT_STUDENTS.QUERY);
             students = new ArrayList<>();
             while (rs.next()) {
                 students.add(new Student(rs.getInt("id"),
@@ -76,9 +77,29 @@ public class DataBaseLogic {
         }
 
     }
+    public Student getStudentById(Integer id){
+        Student student = null;
+        try (Connection connection = DataBaseConnection.getDbConnection();
+             PreparedStatement statement = connection.prepareStatement(StudentsSQL.GET_STUDENT_BY_ID.QUERY)){
+            statement.setInt(1,id);
+            ResultSet rs = statement.executeQuery();
+            if (rs.next()) {
+                student = new Student(rs.getInt("id"),
+                        rs.getString("name"),
+                        rs.getString("surname"),
+                        rs.getInt("age"));
+            }
+        }catch (SQLException e){
+            e.printStackTrace();
+            student = null;
+        }finally {
+            return student;
+        }
+
+    }
     public ArrayList<Student> getStudents(){
         ArrayList<Student> students = null;
-        try (Connection connection = dbs.getDbConnection();
+        try (Connection connection =DataBaseConnection.getDbConnection();
                 Statement statement = connection.createStatement()){
 
             ResultSet rs = statement.executeQuery(StudentsSQL.GET_STUDENTS.QUERY);
@@ -111,8 +132,9 @@ public class DataBaseLogic {
                 "WHERE students.id = ?"),
 
         DELETE_STUDENT_BY_ID("DELETE FROM students where id = ? "),
+        GET_STUDENT_BY_ID("SELECT * FROM students where id = ? "),
 
-        SORT_STUDENTS_BY_AGE("SELECT * FROM students ORDER BY name, surname, age");
+        SORT_STUDENTS("SELECT * FROM students ORDER BY name, surname, age");
 
 
 
